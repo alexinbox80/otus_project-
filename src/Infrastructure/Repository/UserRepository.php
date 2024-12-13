@@ -17,6 +17,7 @@ class UserRepository extends AbstractRepository
     public function subscribeUser(User $author, User $follower): void
     {
         $author->addFollower($follower);
-        $this->flush();
+        $follower->addAuthor($author);
+        $this->entityManager->flush();
     }
 }
