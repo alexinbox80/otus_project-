@@ -38,10 +38,6 @@ services:
         factory: ['@App\Domain\Service\FormatServiceFactory', 'headerFormatService']
         arguments: [1]
 
-    App\Controller\WorldController:
-        arguments:
-            $formatService: '@list_formatter'
-
     hello_greeter:
         class: App\Domain\Service\GreeterService
         arguments:
