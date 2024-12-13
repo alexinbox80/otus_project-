@@ -19,6 +19,14 @@ class UserService
         return $this->userRepository->findUsersByLogin($login);
     }
 
+    /**
+     * @return User[]
+     */
+    public function findUsersByLoginWithCriteria(string $login): array
+    {
+        return $this->userRepository->findUsersByLoginWithCriteria($login);
+    }
+
     public function create(string $login): User
     {
         $user = new User();
