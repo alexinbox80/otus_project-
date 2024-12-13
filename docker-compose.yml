@@ -30,7 +30,7 @@ services:
         image: postgres:15
         ports:
             - 5432:5432
-        container_name: 'symfony_postgresql'
+        container_name: 'symfony_postgres'
         working_dir: /app
         restart: always
         environment:
@@ -40,6 +40,8 @@ services:
         volumes:
             - dump:/app/dump
             - postgresql:/var/lib/postgresql/data
+        networks:
+            - net
 
 #Docker Networks
 networks:
