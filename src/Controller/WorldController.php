@@ -52,9 +52,17 @@ class WorldController extends AbstractController
 //
 //        return $this->json($user->toArray());
 
-        /** @var User $user */
-        $user = $this->userService->updateUserLoginWithDBALQueryBuilder(1, 'User is updated by DBAL');
+//        /** @var User $user */
+//        $user = $this->userService->updateUserLoginWithDBALQueryBuilder(1, 'User is updated by DBAL');
+//
+//        return $this->json($user->toArray());
 
-        return $this->json($user->toArray());
+        $user = $this->userBuilderService->createUserWithTweets(
+            'Charles Dickens',
+            ['Oliver Twist', 'The Christmas Carol']
+        );
+        $userData = $this->userService->findUserWithTweetsWithQueryBuilder($user->getId());
+
+        return $this->json($userData);
     }
 }
