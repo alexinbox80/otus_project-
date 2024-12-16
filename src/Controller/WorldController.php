@@ -48,7 +48,7 @@ class WorldController extends AbstractController
 //        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
 
         /** @var User $user */
-        $user = $this->userService->updateUserLoginWithQueryBuilder(1, 'User is updated');
+        $user = $this->userService->updateUserLoginWithQueryBuilder(1, 'User is updated again');
 
         return $this->json($user->toArray());
     }
