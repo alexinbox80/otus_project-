@@ -103,11 +103,27 @@ class UserRepository extends AbstractRepository
     public function findUserWithTweetsWithQueryBuilder(int $userId): array
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('u')
+        $queryBuilder->select('u', 't')
             ->from(User::class, 'u')
+            ->leftJoin('u.tweets', 't')
             ->where($queryBuilder->expr()->eq('u.id', ':userId'))
             ->setParameter('userId', $userId);
 
         return $queryBuilder->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findUserWithTweetsWithDBALQueryBuilder(int $userId): array
+    {
+        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
+        $queryBuilder->select('u', 't')
+            ->from('"user"', 'u')
+            ->leftJoin('u', 'tweet', 't', 'u.id = t.author_id')
+            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
+            ->setParameter('userId', $userId);
+
+        return $queryBuilder->executeQuery()->fetchAllNumeric();
     }
 }
