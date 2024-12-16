@@ -24,14 +24,17 @@ class WorldController extends AbstractController
 //            ['The Hobbit', 'The Lord of the Rings']
 //        );
 
-        $users = $this->userBuilderService->createUserWithFollower(
-            'J.R.R. Tolkien',
-            'Ivan Ivanov'
-        );
+//        $users = $this->userBuilderService->createUserWithFollower(
+//            'J.R.R. Tolkien',
+//            'Ivan Ivanov'
+//        );
+
+        $user = $this->userService->create('J.R.R. Tolkien');
 
         //$users = $this->userService->findUsersByLogin('Ivan Ivanov');
         //$users = $this->userService->findUsersByLoginWithCriteria('J.R.R. Tolkien');
 
-        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
+        //return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
+        return $this->json($user->toArray());
     }
 }
