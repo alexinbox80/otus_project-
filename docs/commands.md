@@ -16,3 +16,7 @@ php bin/console cache:clear
 
 #show route lists
 php bin/console debug:router
+
+#schema validate
+php bin/console doctrine:schema:validate
+doctrine:schema:update --dump-sql
