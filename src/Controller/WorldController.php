@@ -85,9 +85,15 @@ class WorldController extends AbstractController
 //
 //        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
 
+//        $user = $this->userService->create('William Shakespeare');
+//        $this->userService->removeById($user->getId());
+//        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
         $user = $this->userService->create('William Shakespeare');
         $this->userService->removeById($user->getId());
-        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+        $usersByLogin = $this->userService->findUsersByLoginWithDeleted($user->getLogin());
 
         return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
     }
