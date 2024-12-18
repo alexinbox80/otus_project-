@@ -92,6 +92,19 @@ class User implements EntityInterface
         $this->updatedAt = new DateTime();
     }
 
+    #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
+    private ?DateTime $deletedAt = null;
+
+    public function getDeletedAt(): ?DateTime
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(): void
+    {
+        $this->deletedAt = new DateTime();
+    }
+
     public function addTweet(Tweet $tweet): void
     {
         if (!$this->tweets->contains($tweet)) {

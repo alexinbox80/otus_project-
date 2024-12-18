@@ -8,7 +8,7 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
-        schema_filter: ~^(?!doctrine_)~
+    #    schema_filter: ~^(?!doctrine_)~
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -27,7 +27,10 @@ doctrine:
                 alias: App
         controller_resolver:
             auto_mapping: false
-
+        filters:
+            soft_delete_filter:
+                class: App\Application\Doctrine\SoftDeletedFilter
+                enabled: true
 when@test:
     doctrine:
         dbal:
