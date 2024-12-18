@@ -3,6 +3,7 @@
 namespace App\Domain\Entity;
 
 use App\Domain\ValueObject\CommunicationChannel;
+use App\Domain\ValueObject\CommunicationChannelEnum;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,8 +47,21 @@ class User implements EntityInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: 'Subscription')]
     private Collection $subscriptionFollowers;
 
-    #[ORM\Column(name: 'communication_channel', type: 'communicationChannel', nullable: true)]
-    private ?CommunicationChannel $communicationChannel = null;
+//    #[ORM\Column(name: 'communication_channel', type: 'communicationChannel', nullable: true)]
+//    private ?CommunicationChannel $communicationChannel = null;
+
+    #[ORM\Column(name: 'communication_channel', type: 'string', nullable: true, enumType: CommunicationChannelEnum::class)]
+    private ?CommunicationChannelEnum $communicationChannel = null;
+
+    public function getCommunicationChannel(): ?CommunicationChannelEnum
+    {
+        return $this->communicationChannel;
+    }
+
+    public function setCommunicationChannel(?CommunicationChannelEnum $communicationChannel): void
+    {
+        $this->communicationChannel = $communicationChannel;
+    }
 
     public function __construct()
     {
@@ -153,15 +167,15 @@ class User implements EntityInterface
         $this->deletedAt = $this->deletedAt->add($dateInterval);
     }
 
-    public function getCommunicationChannel(): ?CommunicationChannel
-    {
-        return $this->communicationChannel;
-    }
-
-    public function setCommunicationChannel(?CommunicationChannel $communicationChannel): void
-    {
-        $this->communicationChannel = $communicationChannel;
-    }
+//    public function getCommunicationChannel(): ?CommunicationChannel
+//    {
+//        return $this->communicationChannel;
+//    }
+//
+//    public function setCommunicationChannel(?CommunicationChannel $communicationChannel): void
+//    {
+//        $this->communicationChannel = $communicationChannel;
+//    }
 
     public function toArray(): array
     {
@@ -170,7 +184,8 @@ class User implements EntityInterface
             'login' => $this->login,
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
-            'communicationChannel' => $this->communicationChannel->getValue(),
+            //'communicationChannel' => $this->communicationChannel->getValue(),
+            'communicationChannel' => $this->communicationChannel->value,
             'tweets' => array_map(static fn(Tweet $tweet) => $tweet->toArray(), $this->tweets->toArray()),
             'followers' => array_map(
                 static fn(User $user) => ['id' => $user->getId(), 'login' => $user->getLogin()],

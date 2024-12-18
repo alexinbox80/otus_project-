@@ -4,6 +4,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\User;
 use App\Domain\ValueObject\CommunicationChannel;
+use App\Domain\ValueObject\CommunicationChannelEnum;
 use App\Infrastructure\Repository\UserRepository;
 use DateInterval;
 
@@ -33,7 +34,8 @@ class UserService
     {
         $user = new User();
         $user->setLogin($login);
-        $user->setCommunicationChannel(CommunicationChannel::fromString($communicationChannel));
+        //$user->setCommunicationChannel(CommunicationChannel::fromString($communicationChannel));
+        $user->setCommunicationChannel(CommunicationChannelEnum::from($communicationChannel));
         $this->userRepository->create($user);
 
         return $user;
