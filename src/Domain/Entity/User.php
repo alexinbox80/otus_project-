@@ -2,6 +2,7 @@
 
 namespace App\Domain\Entity;
 
+use App\Domain\ValueObject\CommunicationChannel;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,6 +45,9 @@ class User implements EntityInterface
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: 'Subscription')]
     private Collection $subscriptionFollowers;
+
+    #[ORM\Column(name: 'communication_channel', type: 'communicationChannel', nullable: true)]
+    private ?CommunicationChannel $communicationChannel = null;
 
     public function __construct()
     {
@@ -149,6 +153,16 @@ class User implements EntityInterface
         $this->deletedAt = $this->deletedAt->add($dateInterval);
     }
 
+    public function getCommunicationChannel(): ?CommunicationChannel
+    {
+        return $this->communicationChannel;
+    }
+
+    public function setCommunicationChannel(?CommunicationChannel $communicationChannel): void
+    {
+        $this->communicationChannel = $communicationChannel;
+    }
+
     public function toArray(): array
     {
         return [
@@ -156,6 +170,7 @@ class User implements EntityInterface
             'login' => $this->login,
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
+            'communicationChannel' => $this->communicationChannel->getValue(),
             'tweets' => array_map(static fn(Tweet $tweet) => $tweet->toArray(), $this->tweets->toArray()),
             'followers' => array_map(
                 static fn(User $user) => ['id' => $user->getId(), 'login' => $user->getLogin()],
