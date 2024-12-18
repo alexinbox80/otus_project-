@@ -2,6 +2,7 @@
 
 namespace App\Domain\Entity;
 
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -138,6 +139,14 @@ class User implements EntityInterface
         if (!$this->subscriptionFollowers->contains($subscription)) {
             $this->subscriptionFollowers->add($subscription);
         }
+    }
+
+    public function setDeletedAtInFuture(DateInterval $dateInterval): void
+    {
+        if ($this->deletedAt === null) {
+            $this->deletedAt = new DateTime();
+        }
+        $this->deletedAt = $this->deletedAt->add($dateInterval);
     }
 
     public function toArray(): array

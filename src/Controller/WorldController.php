@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Domain\Entity\User;
 use App\Domain\Service\UserBuilderService;
 use App\Domain\Service\UserService;
+use DateInterval;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -72,7 +73,19 @@ class WorldController extends AbstractController
 //        $userData = $this->userService->findUserWithTweetsWithDBALQueryBuilder($user->getId());
 //        return $this->json($userData);
 
-        $user = $this->userService->create('Jack London');
+//        $user = $this->userService->create('Jack London');
+//        $this->userService->removeById($user->getId());
+//        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
+//        $user = $this->userService->create('Terry Pratchett');
+//        $this->userService->removeByIdInFuture($user->getId(), DateInterval::createFromDateString('+5 min'));
+//        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
+        $user = $this->userService->create('William Shakespeare');
         $this->userService->removeById($user->getId());
         $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
 
