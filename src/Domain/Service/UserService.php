@@ -2,6 +2,8 @@
 
 namespace App\Domain\Service;
 
+use App\Domain\Entity\EmailUser;
+use App\Domain\Entity\PhoneUser;
 use App\Domain\Entity\User;
 use App\Domain\ValueObject\CommunicationChannel;
 use App\Domain\ValueObject\CommunicationChannelEnum;
@@ -30,12 +32,32 @@ class UserService
         return $this->userRepository->findUsersByLoginWithCriteria($login);
     }
 
-    public function create(string $login, string $communicationChannel): User
+//    public function create(string $login, string $communicationChannel): User
+//    {
+//        $user = new User();
+//        $user->setLogin($login);
+//        //$user->setCommunicationChannel(CommunicationChannel::fromString($communicationChannel));
+//        $user->setCommunicationChannel(CommunicationChannelEnum::from($communicationChannel));
+//        $this->userRepository->create($user);
+//
+//        return $user;
+//    }
+
+    public function createWithPhone(string $login, string $phone): User
     {
-        $user = new User();
+        $user = new PhoneUser();
         $user->setLogin($login);
-        //$user->setCommunicationChannel(CommunicationChannel::fromString($communicationChannel));
-        $user->setCommunicationChannel(CommunicationChannelEnum::from($communicationChannel));
+        $user->setPhone($phone);
+        $this->userRepository->create($user);
+
+        return $user;
+    }
+
+    public function createWithEmail(string $login, string $email): User
+    {
+        $user = new EmailUser();
+        $user->setLogin($login);
+        $user->setEmail($email);
         $this->userRepository->create($user);
 
         return $user;

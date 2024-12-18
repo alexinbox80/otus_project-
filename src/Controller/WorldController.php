@@ -97,8 +97,15 @@ class WorldController extends AbstractController
 //
 //        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
 
-        $user = $this->userService->create('Howard Lovecraft', 'email');
+//        $user = $this->userService->create('Howard Lovecraft', 'email');
+//
+//        return $this->json(['user' => $user->toArray()]);
+        $this->userService->createWithPhone('Phone user', '+1234567890');
+        $this->userService->createWithEmail('Email user', 'my@mail.ru');
+        $users = $this->userService->findUsersByLoginWithQueryBuilder('user');
 
-        return $this->json(['user' => $user->toArray()]);
+        return $this->json(
+            ['users' => array_map(static fn (User $user) => $user->toArray(), $users)]
+        );
     }
 }

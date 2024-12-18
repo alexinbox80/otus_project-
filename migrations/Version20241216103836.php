@@ -20,14 +20,18 @@ final class Version20241216103836 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER INDEX author_follower__author_id__ind RENAME TO IDX_564623F3F675F31B');
-        $this->addSql('ALTER INDEX author_follower__follower_id__ind RENAME TO IDX_564623F3AC24F853');
+        $this->addSql('CREATE TABLE phone_user (phone VARCHAR(255) NOT NULL, id BIGINT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE email_user (email VARCHAR(255) NOT NULL, id BIGINT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('ALTER TABLE phone_user ADD CONSTRAINT phone_user_id__fk  FOREIGN KEY (id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE email_user ADD CONSTRAINT email_user_id__fk FOREIGN KEY (id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER INDEX idx_564623f3ac24f853 RENAME TO author_follower__follower_id__ind');
-        $this->addSql('ALTER INDEX idx_564623f3f675f31b RENAME TO author_follower__author_id__ind');
+        $this->addSql('ALTER TABLE phone_user DROP CONSTRAINT phone_user_id__fk');
+        $this->addSql('ALTER TABLE email_user DROP CONSTRAINT email_user_id__fk');
+        $this->addSql('DROP TABLE phone_user');
+        $this->addSql('DROP TABLE email_user');
     }
 }

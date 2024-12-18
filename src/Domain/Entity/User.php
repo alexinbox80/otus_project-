@@ -2,7 +2,6 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\ValueObject\CommunicationChannel;
 use App\Domain\ValueObject\CommunicationChannelEnum;
 use DateInterval;
 use DateTime;
@@ -13,7 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
-class User implements EntityInterface
+#[ORM\InheritanceType('JOINED')] //SINGLE_TABLE
+#[ORM\DiscriminatorColumn(name: 'communication_channel', type: 'string', enumType: CommunicationChannelEnum::class)]
+#[ORM\DiscriminatorMap(
+    [
+        CommunicationChannelEnum::Email->value => EmailUser::class,
+        CommunicationChannelEnum::Phone->value => PhoneUser::class,
+    ]
+)]
+class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
     #[ORM\Id]
@@ -47,21 +54,8 @@ class User implements EntityInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: 'Subscription')]
     private Collection $subscriptionFollowers;
 
-//    #[ORM\Column(name: 'communication_channel', type: 'communicationChannel', nullable: true)]
-//    private ?CommunicationChannel $communicationChannel = null;
-
-    #[ORM\Column(name: 'communication_channel', type: 'string', nullable: true, enumType: CommunicationChannelEnum::class)]
-    private ?CommunicationChannelEnum $communicationChannel = null;
-
-    public function getCommunicationChannel(): ?CommunicationChannelEnum
-    {
-        return $this->communicationChannel;
-    }
-
-    public function setCommunicationChannel(?CommunicationChannelEnum $communicationChannel): void
-    {
-        $this->communicationChannel = $communicationChannel;
-    }
+    #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
+    private ?DateTime $deletedAt = null;
 
     public function __construct()
     {
@@ -111,9 +105,6 @@ class User implements EntityInterface
         $this->updatedAt = new DateTime();
     }
 
-    #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
-    private ?DateTime $deletedAt = null;
-
     public function getDeletedAt(): ?DateTime
     {
         return $this->deletedAt;
@@ -122,6 +113,14 @@ class User implements EntityInterface
     public function setDeletedAt(): void
     {
         $this->deletedAt = new DateTime();
+    }
+
+    public function setDeletedAtInFuture(DateInterval $dateInterval): void
+    {
+        if ($this->deletedAt === null) {
+            $this->deletedAt = new DateTime();
+        }
+        $this->deletedAt = $this->deletedAt->add($dateInterval);
     }
 
     public function addTweet(Tweet $tweet): void
@@ -159,24 +158,6 @@ class User implements EntityInterface
         }
     }
 
-    public function setDeletedAtInFuture(DateInterval $dateInterval): void
-    {
-        if ($this->deletedAt === null) {
-            $this->deletedAt = new DateTime();
-        }
-        $this->deletedAt = $this->deletedAt->add($dateInterval);
-    }
-
-//    public function getCommunicationChannel(): ?CommunicationChannel
-//    {
-//        return $this->communicationChannel;
-//    }
-//
-//    public function setCommunicationChannel(?CommunicationChannel $communicationChannel): void
-//    {
-//        $this->communicationChannel = $communicationChannel;
-//    }
-
     public function toArray(): array
     {
         return [
@@ -184,8 +165,6 @@ class User implements EntityInterface
             'login' => $this->login,
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
-            //'communicationChannel' => $this->communicationChannel->getValue(),
-            'communicationChannel' => $this->communicationChannel->value,
             'tweets' => array_map(static fn(Tweet $tweet) => $tweet->toArray(), $this->tweets->toArray()),
             'followers' => array_map(
                 static fn(User $user) => ['id' => $user->getId(), 'login' => $user->getLogin()],
