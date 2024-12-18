@@ -2,12 +2,110 @@
 
 namespace App\Controller;
 
+use App\Domain\Entity\User;
+use App\Domain\Service\UserBuilderService;
+use App\Domain\Service\UserService;
+use DateInterval;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorldController
+class WorldController extends AbstractController
 {
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly UserBuilderService $userBuilderService
+    )
+    {
+    }
+
     public function hello(): Response
     {
-        return new Response('<html><body><h1><b>Hello,</b><br><i>world</i>!</h1></body></html>');
+//        $user = $this->userBuilderService->createUserWithTweets(
+//            'J.R.R. Tolkien',
+//            ['The Hobbit', 'The Lord of the Rings']
+//        );
+
+//        $users = $this->userBuilderService->createUserWithFollower(
+//            'J.R.R. Tolkien',
+//            'Ivan Ivanov'
+//        );
+
+        //$user = $this->userService->create('J.R.R. Tolkien');
+
+        //$users = $this->userService->findUsersByLogin('Ivan Ivanov');
+        //$users = $this->userService->findUsersByLoginWithCriteria('J.R.R. Tolkien');
+
+        //return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
+        //return $this->json($user->toArray());
+
+
+//        $user = $this->userService->updateUserLogin(1, 'My new user');
+//        [$data, $code] = $user === null ? [null, Response::HTTP_NOT_FOUND] : [$user->toArray(), Response::HTTP_OK];
+//
+//        return $this->json($data, $code);
+
+//        $users = $this->userService->findUsersByLoginWithQueryBuilder('Tolkien');
+//
+//        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
+
+//        /** @var User $user */
+//        $user = $this->userService->updateUserLoginWithQueryBuilder(1, 'User is updated again');
+//
+//        return $this->json($user->toArray());
+
+//        /** @var User $user */
+//        $user = $this->userService->updateUserLoginWithDBALQueryBuilder(1, 'User is updated by DBAL');
+//
+//        return $this->json($user->toArray());
+
+//        $user = $this->userBuilderService->createUserWithTweets(
+//            'Charles Dickens',
+//            ['Oliver Twist', 'The Christmas Carol']
+//        );
+//        $userData = $this->userService->findUserWithTweetsWithQueryBuilder($user->getId());
+//
+//        return $this->json($userData);
+
+//        $user = $this->userBuilderService->createUserWithTweets(
+//            'Charles Dickens',
+//            ['Oliver Twist', 'The Christmas Carol']
+//        );
+//        $userData = $this->userService->findUserWithTweetsWithDBALQueryBuilder($user->getId());
+//        return $this->json($userData);
+
+//        $user = $this->userService->create('Jack London');
+//        $this->userService->removeById($user->getId());
+//        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
+//        $user = $this->userService->create('Terry Pratchett');
+//        $this->userService->removeByIdInFuture($user->getId(), DateInterval::createFromDateString('+5 min'));
+//        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
+//        $user = $this->userService->create('William Shakespeare');
+//        $this->userService->removeById($user->getId());
+//        $usersByLogin = $this->userService->findUsersByLogin($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
+//        $user = $this->userService->create('William Shakespeare');
+//        $this->userService->removeById($user->getId());
+//        $usersByLogin = $this->userService->findUsersByLoginWithDeleted($user->getLogin());
+//
+//        return $this->json(['users' => array_map(static fn (User $user) => $user->toArray(), $usersByLogin)]);
+
+//        $user = $this->userService->create('Howard Lovecraft', 'email');
+//
+//        return $this->json(['user' => $user->toArray()]);
+        $this->userService->createWithPhone('Phone user', '+1234567890');
+        $this->userService->createWithEmail('Email user', 'my@mail.ru');
+        $users = $this->userService->findUsersByLoginWithQueryBuilder('user');
+
+        return $this->json(
+            ['users' => array_map(static fn (User $user) => $user->toArray(), $users)]
+        );
     }
 }
