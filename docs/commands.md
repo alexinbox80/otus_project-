@@ -4,7 +4,6 @@ docker exec -it php sh
 #make new entity
 php bin/console make:entity
 
-
 #create migrations
 php bin/console doctrine:migrations:diff
 

@@ -33,6 +33,14 @@ class UserRepository extends AbstractRepository
         return $repository->matching($criteria)->toArray();
     }
 
+    /**
+     * @return User[]
+     */
+    public function findAll(): array
+    {
+        return $this->entityManager->getRepository(User::class)->findAll();
+    }
+
     public function create(User $user): int
     {
         return $this->store($user);

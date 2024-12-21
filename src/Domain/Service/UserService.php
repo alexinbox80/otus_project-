@@ -32,16 +32,18 @@ class UserService
         return $this->userRepository->findUsersByLoginWithCriteria($login);
     }
 
-//    public function create(string $login, string $communicationChannel): User
-//    {
-//        $user = new User();
-//        $user->setLogin($login);
-//        //$user->setCommunicationChannel(CommunicationChannel::fromString($communicationChannel));
-//        $user->setCommunicationChannel(CommunicationChannelEnum::from($communicationChannel));
-//        $this->userRepository->create($user);
-//
-//        return $user;
-//    }
+    public function findUserById(int $id): ?User
+    {
+        return $this->userRepository->find($id);
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findAll(): array
+    {
+        return $this->userRepository->findAll();
+    }
 
     public function createWithPhone(string $login, string $phone): User
     {
@@ -123,12 +125,16 @@ class UserService
         return $this->userRepository->findUserWithTweetsWithDBALQueryBuilder($userId);
     }
 
-    public function removeById(int $userId): void
+    public function removeById(int $userId): bool
     {
         $user = $this->userRepository->find($userId);
         if ($user instanceof User) {
             $this->userRepository->remove($user);
+
+            return true;
         }
+
+        return false;
     }
 
     public function removeByIdInFuture(int $userId, DateInterval $dateInterval): void
