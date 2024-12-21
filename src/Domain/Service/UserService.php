@@ -152,4 +152,9 @@ class UserService
     {
         return $this->userRepository->findUsersByLoginWithDeleted($login);
     }
+
+    public function remove(User $user): void
+    {
+        $this->userRepository->remove($user);
+    }
 }
