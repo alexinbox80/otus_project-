@@ -91,6 +91,11 @@ class UserService
         return $this->userRepository->findUsersByLoginWithQueryBuilder($login);
     }
 
+    public function updateLogin(User $user, string $login): void
+    {
+        $this->userRepository->updateLogin($user, $login);
+    }
+
     public function updateUserLoginWithQueryBuilder(int $userId, string $login): ?User
     {
         $user = $this->userRepository->find($userId);
