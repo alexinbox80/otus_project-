@@ -20,7 +20,7 @@ class Manager
 
     public function updateUserAvatarLink(User $user, UploadedFile $uploadedFile): void
     {
-        throw new DeprecatedException();
+        //throw new DeprecatedException();
         $file = $this->fileService->storeUploadedFile($uploadedFile);
         $path = $this->baseUrl . str_replace($this->uploadPrefix, '', $file->getRealPath());
         $this->userService->updateAvatarLink($user, $path);
