@@ -159,4 +159,15 @@ class UserRepository extends AbstractRepository
         }
         return $this->entityManager->getRepository(User::class)->findBy(['login' => $name]);
     }
+
+    /**
+     * @param User $user
+     * @param string $avatarLink
+     * @return void
+     */
+    public function updateAvatarLink(User $user, string $avatarLink): void
+    {
+        $user->setAvatarLink($avatarLink);
+        $this->flush();
+    }
 }

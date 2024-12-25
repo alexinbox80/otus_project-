@@ -162,4 +162,14 @@ class UserService
     {
         $this->userRepository->remove($user);
     }
+
+    /**
+     * @param User $user
+     * @param string $avatarLink
+     * @return void
+     */
+    public function updateAvatarLink(User $user, string $avatarLink): void
+    {
+        $this->userRepository->updateAvatarLink($user, $avatarLink);
+    }
 }
