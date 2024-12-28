@@ -20,7 +20,7 @@ final class Version20241216103836 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE phone_user (phone VARCHAR(255) NOT NULL, id BIGINT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE phone_user (phone VARCHAR(20) NOT NULL, id BIGINT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE email_user (email VARCHAR(255) NOT NULL, id BIGINT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE phone_user ADD CONSTRAINT phone_user_id__fk  FOREIGN KEY (id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE email_user ADD CONSTRAINT email_user_id__fk FOREIGN KEY (id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
