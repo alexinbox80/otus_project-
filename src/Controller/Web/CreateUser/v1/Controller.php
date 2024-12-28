@@ -19,9 +19,6 @@ class Controller
     public function __invoke(#[MapRequestPayload] CreateUserDTO $createUserDTO): Response
     {
         $user = $this->manager->create($createUserDTO);
-        if ($user === null) {
-            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
-        }
 
         return new JsonResponse($user->toArray());
     }
