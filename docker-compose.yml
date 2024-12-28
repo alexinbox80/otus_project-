@@ -26,7 +26,29 @@ services:
         networks:
             - net
 
+    symfony_postgres:
+        image: postgres:15
+        ports:
+            - 5432:5432
+        container_name: 'symfony_postgres'
+        working_dir: /app
+        restart: always
+        environment:
+            POSTGRES_DB: 'twitter'
+            POSTGRES_USER: 'user'
+            POSTGRES_PASSWORD: 'password'
+        volumes:
+            - dump:/app/dump
+            - postgresql:/var/lib/postgresql/data
+        networks:
+            - net
+
 #Docker Networks
 networks:
     net:
         driver: bridge
+
+#Docker Volumes
+volumes:
+    dump:
+    postgresql:
