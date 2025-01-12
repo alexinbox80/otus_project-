@@ -21,11 +21,17 @@ final class Version20241225080106 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE "user" ADD avatar_link VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE "user" ADD password VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE "user" ADD age INT NOT NULL');
+        $this->addSql('ALTER TABLE "user" ADD is_active BOOLEAN NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE "user" DROP avatar_link');
+        $this->addSql('ALTER TABLE "user" DROP password');
+        $this->addSql('ALTER TABLE "user" DROP age');
+        $this->addSql('ALTER TABLE "user" DROP is_active');
     }
 }
