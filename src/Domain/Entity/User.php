@@ -3,11 +3,14 @@
 namespace App\Domain\Entity;
 
 use App\Domain\ValueObject\CommunicationChannelEnum;
+use App\Domain\ValueObject\RoleEnum;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity]
@@ -21,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
     ]
 )]
 #[ORM\UniqueConstraint(name: 'user__login__uniq', columns: ['login'], options: ['where' => '(deleted_at IS NULL)'])]
-class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface
+class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
     #[ORM\Id]
@@ -69,6 +72,9 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $avatarLink = null;
+
+    #[ORM\Column(type: 'json', length: 1024, nullable: false)]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -209,6 +215,35 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     public function setAvatarLink(?string $avatarLink): void
     {
         $this->avatarLink = $avatarLink;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = RoleEnum::ROLE_USER->value;
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param string[] $roles
+     */
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->login;
     }
 
     public function toArray(): array
