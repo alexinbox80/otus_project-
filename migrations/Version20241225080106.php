@@ -25,6 +25,8 @@ final class Version20241225080106 extends AbstractMigration
         $this->addSql('ALTER TABLE "user" ADD age INT NOT NULL');
         $this->addSql('ALTER TABLE "user" ADD is_active BOOLEAN NOT NULL');
         $this->addSql('ALTER TABLE "user" ADD roles JSON NOT NULL');
+        $this->addSql('ALTER TABLE "user" ADD token VARCHAR(32) DEFAULT NULL');
+        $this->addSql('CREATE UNIQUE INDEX user__token__uniq ON "user" (token)');
     }
 
     public function down(Schema $schema): void
@@ -35,5 +37,7 @@ final class Version20241225080106 extends AbstractMigration
         $this->addSql('ALTER TABLE "user" DROP age');
         $this->addSql('ALTER TABLE "user" DROP is_active');
         $this->addSql('ALTER TABLE "user" DROP roles');
+        $this->addSql('ALTER TABLE "user" DROP token');
+        $this->addSql('DROP INDEX user__token__uniq');
     }
 }

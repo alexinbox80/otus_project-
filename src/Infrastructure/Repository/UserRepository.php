@@ -170,4 +170,18 @@ class UserRepository extends AbstractRepository
         $user->setAvatarLink($avatarLink);
         $this->flush();
     }
+
+    /**
+     * @param User $user
+     * @return string
+     * @throws \Random\RandomException
+     */
+    public function updateUserToken(User $user): string
+    {
+        $token = base64_encode(random_bytes(20));
+        $user->setToken($token);
+        $this->flush();
+
+        return $token;
+    }
 }

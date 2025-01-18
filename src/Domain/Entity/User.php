@@ -43,6 +43,9 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $isActive;
 
+    #[ORM\Column(type: 'string', length: 32, unique: true, nullable: true)]
+    private ?string $token = null;
+
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private DateTime $createdAt;
 
@@ -244,6 +247,16 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     public function getUserIdentifier(): string
     {
         return $this->login;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): void
+    {
+        $this->token = $token;
     }
 
     public function toArray(): array
