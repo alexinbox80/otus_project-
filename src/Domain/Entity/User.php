@@ -262,12 +262,13 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'login' => $this->login,
-            'avatar' => $this->avatarLink,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
+            'id' => $this->getId(),
+            'login' => $this->getLogin(),
+            'avatar' => $this->getAvatarLink(),
+            'createdAt' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'updatedAt' => $this->getUpdatedAt()->format('Y-m-d H:i:s'),
             'tweets' => array_map(static fn(Tweet $tweet) => $tweet->toArray(), $this->tweets->toArray()),
+            'roles' => $this->getRoles(),
             'followers' => array_map(
                 static fn(User $user) => ['id' => $user->getId(), 'login' => $user->getLogin()],
                 $this->followers->toArray()

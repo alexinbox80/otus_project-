@@ -215,4 +215,9 @@ class UserService
     {
         $this->userRepository->updateAvatarLink($user, $avatarLink);
     }
+
+    public function findUserByToken(string $token): ?User
+    {
+        return $this->userRepository->findUserByToken($token);
+    }
 }
