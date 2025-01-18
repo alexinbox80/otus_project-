@@ -18,7 +18,7 @@ security:
         main:
             lazy: true
             stateless: true
-            custom_authenticator: App\Application\Security\ApiTokenAuthenticator
+            custom_authenticator: App\Application\Security\JwtAuthenticator
 
             form_login:
                 login_path: app_login
