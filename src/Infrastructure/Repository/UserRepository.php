@@ -192,4 +192,10 @@ class UserRepository extends AbstractRepository
 
         return $user;
     }
+
+    public function clearUserToken(User $user): void
+    {
+        $user->setToken(null);
+        $this->flush();
+    }
 }
