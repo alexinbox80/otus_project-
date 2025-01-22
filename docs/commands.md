@@ -12,6 +12,8 @@ php bin/console doctrine:migrations:migrate
 
 #clear cache \
 php bin/console cache:clear
+php bin/console cache:pool:clear cache.system_clearer
+
 
 #show route lists \
 php bin/console debug:router
