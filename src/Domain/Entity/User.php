@@ -3,6 +3,10 @@
 namespace App\Domain\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Web\CreateUser\v2\Input\CreateUserDTO;
+use App\Controller\Web\CreateUser\v2\Output\CreatedUserDTO;
+use App\Domain\ApiPlatform\State\UserProcessor;
 use App\Domain\ValueObject\CommunicationChannelEnum;
 use App\Domain\ValueObject\RoleEnum;
 use DateInterval;
@@ -26,6 +30,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 )]
 #[ORM\UniqueConstraint(name: 'user__login__uniq', columns: ['login'], options: ['where' => '(deleted_at IS NULL)'])]
 #[ApiResource]
+#[Post(input: CreateUserDTO::class, output: CreatedUserDTO::class, processor: UserProcessor::class)]
 class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
