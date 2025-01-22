@@ -23,7 +23,7 @@ security:
             lazy: true
             stateless: true
             custom_authenticator: App\Application\Security\JwtAuthenticator
-
+            security: false
             form_login:
                 login_path: app_login
                 check_path: app_login

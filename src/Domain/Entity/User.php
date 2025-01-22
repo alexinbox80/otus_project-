@@ -2,6 +2,7 @@
 
 namespace App\Domain\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Domain\ValueObject\CommunicationChannelEnum;
 use App\Domain\ValueObject\RoleEnum;
 use DateInterval;
@@ -24,6 +25,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     ]
 )]
 #[ORM\UniqueConstraint(name: 'user__login__uniq', columns: ['login'], options: ['where' => '(deleted_at IS NULL)'])]
+#[ApiResource]
 class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
