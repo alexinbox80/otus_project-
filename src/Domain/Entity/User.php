@@ -2,11 +2,15 @@
 
 namespace App\Domain\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Web\CreateUser\v2\Input\CreateUserDTO;
 use App\Controller\Web\CreateUser\v2\Output\CreatedUserDTO;
+use App\Domain\ApiPlatform\JsonFilter;
 use App\Domain\ApiPlatform\State\UserProcessor;
 use App\Domain\ApiPlatform\State\UserProviderDecorator;
 use App\Domain\ValueObject\CommunicationChannelEnum;
@@ -18,6 +22,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity]
@@ -32,8 +37,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 )]
 #[ORM\UniqueConstraint(name: 'user__login__uniq', columns: ['login'], options: ['where' => '(deleted_at IS NULL)'])]
 #[ApiResource]
-#[Post(input: CreateUserDTO::class, output: CreatedUserDTO::class, processor: UserProcessor::class)]
-#[Get(output: CreatedUserDTO::class, provider: UserProviderDecorator::class)]
+#[ApiFilter(SearchFilter::class, properties: ['login' => 'partial'])]
+#[ApiFilter(RangeFilter::class, properties: ['age'])]
+//#[ApiFilter(JsonFilter::class, properties: ['roles.type' => ['type' => 'string', 'strategy' => 'exact']])]
+#[ApiFilter(JsonFilter::class, properties: ['roles.type' => ['type' => 'string', 'strategy' => 'iend']])]
+//#[Post(input: CreateUserDTO::class, output: CreatedUserDTO::class, processor: UserProcessor::class)]
+//#[Get(output: CreatedUserDTO::class, provider: UserProviderDecorator::class)]
 class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
@@ -42,12 +51,14 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 32, nullable: false)]
+    #[Groups(['subscription:get'])]
     private string $login;
 
     #[ORM\Column(type: 'string', nullable: false)]
     private string $password;
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Groups(['subscription:get'])]
     private int $age;
 
     #[ORM\Column(type: 'boolean', nullable: false)]
@@ -87,6 +98,7 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     private ?string $avatarLink = null;
 
     #[ORM\Column(type: 'json', length: 1024, nullable: false)]
+    #[Groups(['subscription:get'])]
     private array $roles = [];
 
     public function __construct()

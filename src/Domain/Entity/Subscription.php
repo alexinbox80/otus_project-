@@ -2,13 +2,19 @@
 
 namespace App\Domain\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'subscription')]
 #[ORM\Entity]
 #[ORM\Index(name: 'subscription__author_id__ind', columns: ['author_id'])]
 #[ORM\Index(name: 'subscription__follower_id__ind', columns: ['follower_id'])]
+#[ApiResource(normalizationContext: ['groups' => ['subscription:get']])]
+#[ApiFilter(RangeFilter::class, properties: ['author.id'])]
 class Subscription implements EntityInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
@@ -18,10 +24,12 @@ class Subscription implements EntityInterface
 
     #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'subscriptionFollowers')]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
+    #[Groups(['subscription:get'])]
     private User $author;
 
     #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'subscriptionAuthors')]
     #[ORM\JoinColumn(name: 'follower_id', referencedColumnName: 'id')]
+    #[Groups(['subscription:get'])]
     private User $follower;
 
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
