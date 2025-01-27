@@ -46,7 +46,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Query(),
         new QueryCollection(),
         new QueryCollection(resolver: UserCollectionResolver::class, name: 'protected'),
-        new Query(resolver: UserResolver::class, name: 'protected')
+        new Query(
+            resolver: UserResolver::class,
+            args: ['_id' => ['type' => 'Int'], 'login' => ['type' => 'String']],
+            name: 'protected'
+        ),
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['login' => 'partial'])]
