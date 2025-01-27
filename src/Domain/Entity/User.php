@@ -7,9 +7,13 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Web\CreateUser\v2\Input\CreateUserDTO;
 use App\Controller\Web\CreateUser\v2\Output\CreatedUserDTO;
+use App\Domain\ApiPlatform\GraphQL\Resolver\UserCollectionResolver;
+use App\Domain\ApiPlatform\GraphQL\Resolver\UserResolver;
 use App\Domain\ApiPlatform\JsonFilter;
 use App\Domain\ApiPlatform\State\UserProcessor;
 use App\Domain\ApiPlatform\State\UserProviderDecorator;
@@ -24,6 +28,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
@@ -36,7 +41,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ]
 )]
 #[ORM\UniqueConstraint(name: 'user__login__uniq', columns: ['login'], options: ['where' => '(deleted_at IS NULL)'])]
-#[ApiResource]
+#[ApiResource(
+    graphQlOperations: [
+        new Query(),
+        new QueryCollection(),
+        new QueryCollection(resolver: UserCollectionResolver::class, name: 'protected'),
+        new Query(resolver: UserResolver::class, name: 'protected')
+    ]
+)]
 #[ApiFilter(SearchFilter::class, properties: ['login' => 'partial'])]
 #[ApiFilter(RangeFilter::class, properties: ['age'])]
 //#[ApiFilter(JsonFilter::class, properties: ['roles.type' => ['type' => 'string', 'strategy' => 'exact']])]
@@ -100,6 +112,9 @@ class User implements EntityInterface, SoftDeleteableInterface, SoftDeleteableIn
     #[ORM\Column(type: 'json', length: 1024, nullable: false)]
     #[Groups(['subscription:get'])]
     private array $roles = [];
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $isProtected;
 
     public function __construct()
     {
@@ -279,6 +294,16 @@ class User implements EntityInterface, SoftDeleteableInterface, SoftDeleteableIn
     public function setToken(?string $token): void
     {
         $this->token = $token;
+    }
+
+    public function isProtected(): bool
+    {
+        return $this->isProtected ?? false;
+    }
+
+    public function setIsProtected(bool $isProtected): void
+    {
+        $this->isProtected = $isProtected;
     }
 
     /**
