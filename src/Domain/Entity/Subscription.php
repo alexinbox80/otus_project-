@@ -3,6 +3,7 @@
 namespace App\Domain\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use DateTime;
@@ -15,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Index(name: 'subscription__follower_id__ind', columns: ['follower_id'])]
 #[ApiResource(normalizationContext: ['groups' => ['subscription:get']])]
 #[ApiFilter(RangeFilter::class, properties: ['author.id'])]
+#[ApiFilter(SearchFilter::class, properties: ['follower.login' => 'partial'])]
 class Subscription implements EntityInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
