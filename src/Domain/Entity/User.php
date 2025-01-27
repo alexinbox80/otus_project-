@@ -43,7 +43,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiFilter(JsonFilter::class, properties: ['roles.type' => ['type' => 'string', 'strategy' => 'iend']])]
 //#[Post(input: CreateUserDTO::class, output: CreatedUserDTO::class, processor: UserProcessor::class)]
 //#[Get(output: CreatedUserDTO::class, provider: UserProviderDecorator::class)]
-class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFutureInterface, UserInterface, PasswordAuthenticatedUserInterface
+class User implements EntityInterface, SoftDeleteableInterface, SoftDeleteableInFutureInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
     #[ORM\Id]
@@ -279,6 +279,14 @@ class User implements EntityInterface, SoftDeletableInterface, SoftDeletableInFu
     public function setToken(?string $token): void
     {
         $this->token = $token;
+    }
+
+    /**
+        * @return Subscription[]
+    */
+    public function getSubscriptionFollowers(): array
+    {
+        return $this->subscriptionFollowers->toArray();
     }
 
     public function toArray(): array

@@ -4,7 +4,7 @@ namespace App\Domain\Entity;
 
 use DateTime;
 
-interface SoftDeletableInterface
+interface SoftDeleteableInterface
 {
     public function getDeletedAt(): ?DateTime;
 

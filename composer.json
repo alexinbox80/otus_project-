@@ -29,7 +29,8 @@
         "symfony/twig-bundle": "7.1.*",
         "symfony/validator": "7.1.*",
         "symfony/webpack-encore-bundle": "^2.2",
-        "symfony/yaml": "7.1.*"
+        "symfony/yaml": "7.1.*",
+        "webonyx/graphql-php": "^15.19"
     },
     "config": {
         "allow-plugins": {
