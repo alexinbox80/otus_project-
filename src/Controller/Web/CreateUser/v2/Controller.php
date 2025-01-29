@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class Controller
 {
     public function __construct(
-        private readonly ManagerInterface $manager,
+        private readonly Manager $manager,
     ) {
     }
 
