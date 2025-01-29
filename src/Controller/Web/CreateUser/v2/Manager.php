@@ -10,7 +10,6 @@ use App\Domain\Model\CreateUserModel;
 use App\Domain\Service\ModelFactory;
 use App\Domain\Service\UserService;
 use App\Domain\ValueObject\CommunicationChannelEnum;
-use Psr\Log\LoggerInterface;
 
 class Manager
 {
@@ -18,7 +17,6 @@ class Manager
         /** @var ModelFactory<CreateUserModel> */
         private readonly ModelFactory $modelFactory,
         private readonly UserService $userService,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -38,8 +36,6 @@ class Manager
         );
         $user = $this->userService->create($createUserModel);
 
-        $this->addLogs();
-
         return new CreatedUserDTO(
             $user->getId(),
             $user->getLogin(),
@@ -50,17 +46,5 @@ class Manager
             $user instanceof PhoneUser ? $user->getPhone() : null,
             $user instanceof EmailUser ? $user->getEmail() : null,
         );
-    }
-
-    private function addLogs(): void
-    {
-        $this->logger->debug('This is debug message');
-        $this->logger->info('This is info message');
-        $this->logger->notice('This is notice message');
-        $this->logger->warning('This is warning message');
-        $this->logger->error('This is error message');
-        $this->logger->critical('This is critical message');
-        $this->logger->alert('This is alert message');
-        $this->logger->emergency('This is emergency message');
     }
 }
