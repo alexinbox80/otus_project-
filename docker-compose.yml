@@ -97,6 +97,13 @@ services:
         networks:
             - net
 
+    symfony_memcached:
+        image: memcached:latest
+        container_name: 'symfony_memcached'
+        restart: always
+        ports:
+            - 11211:11211
+
 #Docker Networks
 networks:
     net:
