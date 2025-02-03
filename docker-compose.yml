@@ -103,12 +103,16 @@ services:
         restart: always
         ports:
             - 11211:11211
+        networks:
+            - net
 
     symfony_redis:
         container_name: 'symfony_redis'
         image: redis:alpine
         ports:
             - 6379:6379
+        networks:
+            - net
 
 #Docker Networks
 networks:
