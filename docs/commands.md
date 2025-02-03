@@ -14,6 +14,11 @@ php bin/console doctrine:migrations:migrate
 php bin/console cache:clear
 php bin/console cache:pool:clear cache.system_clearer
 
+#clear doctrine cache \
+php bin/console doctrine:cache:clear-metadata
+php bin/console doctrine:cache:clear-query --env=prod
+php bin/console doctrine:cache:clear-result --env=prod
+php bin/console doctrine:cache:clear-metadata --env=prod
 
 #show route lists \
 php bin/console debug:router
