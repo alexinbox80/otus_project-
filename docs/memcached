@@ -1,2 +1,4 @@
 telnet 127.0.0.1 11211
 stats items
+stats cachedump K 1000, где K - идентификатор записи
+get KEY, где KEY - ключ из записи
