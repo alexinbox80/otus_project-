@@ -101,3 +101,6 @@ services:
             - symfony_graphite
             - 8125
             - my_app
+
+    App\Domain\Repository\TweetRepositoryInterface:
+        alias: App\Infrastructure\Repository\TweetRepositoryCacheDecorator

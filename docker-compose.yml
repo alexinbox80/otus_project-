@@ -104,6 +104,12 @@ services:
         ports:
             - 11211:11211
 
+    symfony_redis:
+        container_name: 'symfony_redis'
+        image: redis:alpine
+        ports:
+            - 6379:6379
+
 #Docker Networks
 networks:
     net:
