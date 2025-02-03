@@ -26,7 +26,100 @@ services:
         networks:
             - net
 
+    symfony_postgres:
+        image: postgres:15
+        ports:
+            - 5432:5432
+        container_name: 'symfony_postgres'
+        working_dir: /app
+        restart: always
+        environment:
+            POSTGRES_DB: 'twitter'
+            POSTGRES_USER: 'user'
+            POSTGRES_PASSWORD: 'password'
+        volumes:
+            - dump:/app/dump
+            - postgresql:/var/lib/postgresql/data
+        networks:
+            - net
+
+    symfony_elasticsearch:
+        image: elastic/elasticsearch:7.9.2
+        container_name: 'symfony_elasticsearch'
+        environment:
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - discovery.type=single-node
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#        platform: linux/arm64/v8
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        ports:
+            - 9200:9200
+            - 9300:9300
+        networks:
+            - net
+
+    symfony_kibana:
+        image: elastic/kibana:7.9.2
+        container_name: 'symfony_kibana'
+#        platform: linux/arm64/v8
+        depends_on:
+            - symfony_elasticsearch
+        ports:
+            - 5601:5601
+        networks:
+            - net
+
+    symfony_graphite:
+        image: graphiteapp/graphite-statsd
+        container_name: 'symfony_graphite'
+        restart: always
+        ports:
+            - 8000:80
+            - 2003:2003
+            - 2004:2004
+            - 2023:2023
+            - 2024:2024
+            - 8125:8125/udp
+            - 8126:8126
+        networks:
+            - net
+
+    symfony_grafana:
+        image: grafana/grafana
+        container_name: 'symfony_grafana'
+        restart: always
+        ports:
+            - 3000:3000
+        networks:
+            - net
+
+    symfony_memcached:
+        image: memcached:latest
+        container_name: 'symfony_memcached'
+        restart: always
+        ports:
+            - 11211:11211
+        networks:
+            - net
+
+    symfony_redis:
+        container_name: 'symfony_redis'
+        image: redis:alpine
+        ports:
+            - 6379:6379
+        networks:
+            - net
+
 #Docker Networks
 networks:
     net:
         driver: bridge
+
+#Docker Volumes
+volumes:
+    dump:
+    postgresql:
