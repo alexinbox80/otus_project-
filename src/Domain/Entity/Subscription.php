@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(normalizationContext: ['groups' => ['subscription:get']])]
 #[ApiFilter(RangeFilter::class, properties: ['author.id'])]
 #[ApiFilter(SearchFilter::class, properties: ['follower.login' => 'partial'])]
+#[ORM\HasLifecycleCallbacks]
 class Subscription implements EntityInterface
 {
     #[ORM\Column(name: 'id', type: 'bigint', unique: true)]
@@ -74,6 +75,7 @@ class Subscription implements EntityInterface
         return $this->createdAt;
     }
 
+    #[ORM\PrePersist]
     public function setCreatedAt(): void {
         $this->createdAt = new DateTime();
     }
@@ -82,6 +84,8 @@ class Subscription implements EntityInterface
         return $this->updatedAt;
     }
 
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function setUpdatedAt(): void {
         $this->updatedAt = new DateTime();
     }
