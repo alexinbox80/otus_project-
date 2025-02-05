@@ -1,11 +1,9 @@
-#version: '3.7'
-
 services:
     symfony_php-fpm:
         image: php:8.3-fpm-alpine
         build:
             dockerfile: docker/php-fpm/Dockerfile
-        container_name: 'symfony_php'
+        container_name: 'symfony_php-fpm'
         ports:
             - '9000:9000'
         volumes:
@@ -111,6 +109,20 @@ services:
         image: redis:alpine
         ports:
             - 6379:6379
+        networks:
+            - net
+
+    symfony_rabbitmq:
+        image: rabbitmq:3-management
+        working_dir: /app
+        hostname: symfony_rabbit-mq
+        container_name: 'symfony_rabbit-mq'
+        ports:
+            - 15672:15672
+            - 5672:5672
+        environment:
+            RABBITMQ_DEFAULT_USER: user
+            RABBITMQ_DEFAULT_PASS: password
         networks:
             - net
 
