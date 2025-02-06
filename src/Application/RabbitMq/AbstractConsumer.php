@@ -42,6 +42,7 @@ abstract class AbstractConsumer implements ConsumerInterface
     {
         try {
             $message = $this->serializer->deserialize($msg->getBody(), $this->getMessageClass(), 'json');
+
             $errors = $this->validator->validate($message);
             if ($errors->count() > 0) {
                 return $this->reject((string)$errors);
