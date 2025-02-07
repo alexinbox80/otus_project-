@@ -6,5 +6,5 @@ use App\Domain\DTO\AddFollowersDTO;
 
 interface AddFollowersBusInterface
 {
-    public function sendAddFollowersMessage(AddFollowersDTO $addFollowersDTO);
+    public function sendAddFollowersMessage(AddFollowersDTO $addFollowersDTO): bool;
 }

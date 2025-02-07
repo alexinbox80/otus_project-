@@ -16,7 +16,7 @@ class AddFollowersRabbitMqBus implements AddFollowersBusInterface
     public function sendAddFollowersMessage(AddFollowersDTO $addFollowersDTO): bool
     {
         // Example 1. Multiple users per message
-//        $messages = [$addFollowersDTO];
+        $messages = [$addFollowersDTO];
 
         // Example 2. One user per message
 //        $messages = [];
@@ -24,7 +24,6 @@ class AddFollowersRabbitMqBus implements AddFollowersBusInterface
 //            $messages[] = new AddFollowersDTO($addFollowersDTO->userId, $addFollowersDTO->followerLogin . "_$i", 1);
 //        }
 
-        //return $this->rabbitMqBus->publishToExchange(AmqpExchangeEnum::AddFollowers, $messages);
-        return $this->rabbitMqBus->publishToExchange(AmqpExchangeEnum::AddFollowers, [$addFollowersDTO]);
+        return $this->rabbitMqBus->publishMultipleToExchange(AmqpExchangeEnum::AddFollowers, $messages);
     }
 }
