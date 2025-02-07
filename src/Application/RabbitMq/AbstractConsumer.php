@@ -3,6 +3,7 @@
 namespace App\Application\RabbitMq;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
@@ -15,6 +16,8 @@ abstract class AbstractConsumer implements ConsumerInterface
     private readonly EntityManagerInterface $entityManager;
     private readonly ValidatorInterface $validator;
     private readonly SerializerInterface $serializer;
+
+    private readonly ManagerRegistry $doctrine;
 
     abstract protected function getMessageClass(): string;
 
@@ -38,6 +41,12 @@ abstract class AbstractConsumer implements ConsumerInterface
         $this->serializer = $serializer;
     }
 
+    #[Required]
+    public function setDoctrine(ManagerRegistry $doctrine): void
+    {
+        $this->doctrine = $doctrine;
+    }
+
     public function execute(AMQPMessage $msg): int
     {
         try {
@@ -49,11 +58,14 @@ abstract class AbstractConsumer implements ConsumerInterface
             }
 
             return $this->handle($message);
-        } catch (UnsupportedFormatException $e) {
+        //} catch (UnsupportedFormatException $e) {
+        } catch (\Throwable $e) {
             return $this->reject($e->getMessage());
         } finally {
             $this->entityManager->clear();
             $this->entityManager->getConnection()->close();
+
+            $this->doctrine->resetManager();
         }
     }
 
